@@ -30,7 +30,21 @@ yarn add react-native-appmetrica-yandex
 2. **Android**
 
     **RN<0.60**:
-       in progress
+    
+    2.1. Open up `android/app/src/main/java/[...]/MainActivity.java`
+      - Add `import com.codeard.yandexmetrica.YandexAppmetricaPackage;` to the imports at the top of the file
+      - Add `new YandexAppmetricaPackage()` to the list returned by the `getPackages()` method
+      
+    2.2. Append the following lines to `android/settings.gradle`:
+      	```
+      	include ':react-native-appmetrica-yandex'
+      	project(':react-native-appmetrica-yandex').projectDir = new File(rootProject.projectDir, 	'../node_modules/react-native-appmetrica-yandex/android')
+      	```
+    
+    2.3. Insert the following lines inside the dependencies block in `android/app/build.gradle`:
+      	```
+        implementation project(':react-native-appmetrica-yandex')
+      	```
        
     **RN>=0.60**:
     With React Native 0.60 and later, linking is done automatically
