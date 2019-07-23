@@ -1,6 +1,5 @@
 #import "YandexAppmetrica.h"
 
-
 @implementation YandexAppmetrica
 
 #import "YandexAppmetrica.h"
