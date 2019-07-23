@@ -1,23 +1,33 @@
-package com.codeard.yandexmetrica;
+#import "YandexAppmetrica.h"
+#import <React/RCTLog.h>
+#import <React/RCTConvert.h>
+#import <YandexMobileMetrica/YandexMobileMetrica.h>
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+@implementation YandexAppmetrica {
 
-import com.facebook.react.ReactPackage;
-import com.facebook.react.bridge.NativeModule;
-import com.facebook.react.bridge.ReactApplicationContext;
-import com.facebook.react.uimanager.ViewManager;
-import com.facebook.react.bridge.JavaScriptModule;
-
-public class YandexAppmetricaPackage implements ReactPackage {
-    @Override
-    public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
-        return Arrays.<NativeModule>asList(new YandexAppmetricaModule(reactContext));
-    }
-
-    @Override
-    public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
-        return Collections.emptyList();
-    }
 }
+
+RCT_EXPORT_MODULE();
+
+RCT_EXPORT_METHOD(activateWithApiKey:(NSString *)apiKey)
+{
+    YMMYandexMetricaConfiguration *configuration = [[YMMYandexMetricaConfiguration alloc] initWithApiKey:apiKey];
+    [YMMYandexMetrica activateWithConfiguration:configuration];
+}
+
+RCT_EXPORT_METHOD(reportEvent:(NSString *)message)
+{
+    [YMMYandexMetrica reportEvent:message onFailure:NULL];
+}
+
+RCT_EXPORT_METHOD(reportEvent:(NSString *)message params:(nullable NSDictionary *) params)
+{
+    [YMMYandexMetrica reportEvent:message parameters:params onFailure:NULL];
+}
+
+RCT_EXPORT_METHOD(reportError:(NSString *)message exception:(nullable NSString *) exceptionText) {
+    NSException *exception = [[NSException alloc] initWithName:exceptionText reason:nil userInfo:nil];
+    [YMMYandexMetrica reportError:message exception:exception onFailure:NULL];
+}
+
+@end
