@@ -33,6 +33,7 @@ public class YandexAppmetricaModule extends ReactContextBaseJavaModule {
     private boolean dryRun = false;
     private boolean initialized = false;
     private static boolean initializedStatic = false;
+    public static String TAG = "YandexAppmetrica";
 
     private final ReactApplicationContext reactContext;
 
@@ -43,7 +44,7 @@ public class YandexAppmetricaModule extends ReactContextBaseJavaModule {
 
     @Override
     public String getName() {
-        return "YandexAppmetrica";
+        return TAG;
     }
 
     @ReactMethod
@@ -53,8 +54,8 @@ public class YandexAppmetricaModule extends ReactContextBaseJavaModule {
           Log.i(TAG, "Dry run mode, skip Yandex Mobile Metrica activation");
           return;
         }
-
-        YandexMetrica.activate(getReactApplicationContext(), apiKey);
+        YandexMetricaConfig config = YandexMetricaConfig.newConfigBuilder(apiKey).build();
+        YandexMetrica.activate(getReactApplicationContext(), config);
       }
 
       @ReactMethod
