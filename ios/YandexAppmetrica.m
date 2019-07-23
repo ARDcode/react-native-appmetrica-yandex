@@ -7,45 +7,27 @@
 
 }
 
-BOOL dryRun = false;
-BOOL initialized = false;
-
 RCT_EXPORT_MODULE();
+
 RCT_EXPORT_METHOD(activateWithApiKey:(NSString *)apiKey)
 {
-  initialized = true;
-  if (dryRun) {
-    NSLog(@"Dry run mode, skip Yandex Mobile Metrica activation");
-    return;
-  }
-
-YMMYandexMetricaConfiguration *configuration = [[YMMYandexMetricaConfiguration alloc] initWithApiKey:apiKey];
-[YMMYandexMetrica activateWithConfiguration:configuration];
+    YMMYandexMetricaConfiguration *configuration = [[YMMYandexMetricaConfiguration alloc] initWithApiKey:apiKey];
+    [YMMYandexMetrica activateWithConfiguration:configuration];
 }
 
-RCT_EXPORT_METHOD(reportEvent:(NSString *)event)
+RCT_EXPORT_METHOD(reportEvent:(NSString *)message)
 {
-  if (dryRun) {
-    NSLog(@"Dry run mode, skip event reporting");
-    return;
-  }
-  [YMMYandexMetrica reportEvent:event
-                      onFailure:^(NSError *error) {
-  NSLog(@"DID FAIL REPORT EVENT: %@", event);
-  NSLog(@"REPORT ERROR: %@", [error localizedDescription]);
-                      }];
+    [YMMYandexMetrica reportEvent:message onFailure:NULL];
 }
 
-RCT_EXPORT_METHOD(setDryRun:(BOOL *)enabled)
+RCT_EXPORT_METHOD(reportEvent:(NSString *)message params:(nullable NSDictionary *) params)
 {
-  dryRun = enabled;
+    [YMMYandexMetrica reportEvent:message parameters:params onFailure:NULL];
 }
 
-RCT_EXPORT_METHOD(isInitialized:(RCTPromiseResolveBlock)resolve
-                  reject:(__unused RCTPromiseRejectBlock)reject)
-{
-    NSNumber *ret = [NSNumber numberWithBool:initialized];
-    resolve(ret);
+RCT_EXPORT_METHOD(reportError:(NSString *)message exception:(nullable NSString *) exceptionText) {
+    NSException *exception = [[NSException alloc] initWithName:exceptionText reason:nil userInfo:nil];
+    [YMMYandexMetrica reportError:message exception:exception onFailure:NULL];
 }
 
 @end
