@@ -29,9 +29,9 @@ export class YandexMetrica {
     /**
      * Sends error with reason.
      * @param {string} name
-     * @param {object} exception
+     * @param {object || string} exception
      */
-    static reportError(name: string, exception: string) {
+    static reportError(name: string, exception: string | Object) {
         YandexAppmetrica.reportError(name, exception);
     }
 }
