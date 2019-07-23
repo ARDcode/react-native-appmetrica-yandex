@@ -1,7 +1,7 @@
 {
   "name": "react-native-appmetrica-yandex",
   "title": "React Native Yandex Appmetrica",
-  "version": "0.0.9",
+  "version": "0.0.11",
   "description": "React Native Yandex Appmetrica",
   "main": "index.js",
   "scripts": {

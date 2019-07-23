@@ -1,4 +1,4 @@
-package com.codeard.yandexmatrica;
+package com.codeard.yandexmetrica;
 
 import java.util.Arrays;
 import java.util.Collections;

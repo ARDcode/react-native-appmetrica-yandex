@@ -1,4 +1,4 @@
-package com.codeard.yandexmatrica;
+package com.codeard.yandexmetrica;
 
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -16,7 +16,7 @@ import java.util.Map;
 
 import android.app.Application;
 import android.content.Context;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.util.Log;
 
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -56,7 +56,7 @@ public class YandexAppmetricaModule extends ReactContextBaseJavaModule {
           return;
         }
         YandexMetricaConfig config = YandexMetricaConfig.newConfigBuilder(apiKey).build();
-        YandexMetrica.activate(getReactApplicationContext(), config);
+        YandexMetrica.activate(reactContext, config);
       }
 
       @ReactMethod
@@ -136,7 +136,7 @@ public class YandexAppmetricaModule extends ReactContextBaseJavaModule {
 
       public static void activate(Context context, String apiKey) {
         YandexMetricaConfig config = YandexMetricaConfig.newConfigBuilder(apiKey).build();
-        YandexMetrica.activate(getReactApplicationContext(), config);
+        YandexMetrica.activate(context, config);
         initializedStatic = true;
       }
 
