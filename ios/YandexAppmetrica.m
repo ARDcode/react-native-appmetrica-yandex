@@ -1,8 +1,4 @@
 #import "YandexAppmetrica.h"
-
-@implementation YandexAppmetrica
-
-#import "YandexAppmetrica.h"
 #import <React/RCTLog.h>
 #import <React/RCTConvert.h>
 #import <YandexMobileMetrica/YandexMobileMetrica.h>
