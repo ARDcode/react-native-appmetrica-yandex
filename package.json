@@ -1,0 +1,33 @@
+{
+  "name": "react-native-appmetrica-yandex",
+  "title": "React Native Yandex Appmetrica",
+  "version": "0.0.2",
+  "description": "TODO",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/github_account/react-native-yandex-appmetrica.git",
+    "baseUrl": "https://github.com/github_account/react-native-yandex-appmetrica"
+  },
+  "keywords": [
+    "react-native"
+  ],
+  "author": {
+    "name": "ARDCode",
+    "email": "codeard@gmail.com"
+  },
+  "license": "Apache-2.0",
+  "licenseFilename": "LICENSE",
+  "readmeFilename": "README.md",
+  "peerDependencies": {
+    "react": "^16.5.0",
+    "react-native": ">=0.57.0-rc.0 <1.0.x"
+  },
+  "devDependencies": {
+    "react": "^16.5.0",
+    "react-native": "^0.60.3"
+  }
+}
