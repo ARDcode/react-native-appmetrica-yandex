@@ -9,6 +9,7 @@ import com.facebook.react.bridge.ReadableMapKeySetIterator;
 import com.facebook.react.bridge.Promise;
 
 import com.yandex.metrica.YandexMetrica;
+import com.yandex.metrica.YandexMetricaConfig;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -134,7 +135,8 @@ public class YandexAppmetricaModule extends ReactContextBaseJavaModule {
       }
 
       public static void activate(Context context, String apiKey) {
-        YandexMetrica.activate(context, apiKey);
+        YandexMetricaConfig config = YandexMetricaConfig.newConfigBuilder(apiKey).build();
+        YandexMetrica.activate(getReactApplicationContext(), config);
         initializedStatic = true;
       }
 
