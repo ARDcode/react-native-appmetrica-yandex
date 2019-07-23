@@ -9,12 +9,12 @@ Pod::Spec.new do |s|
   s.description  = <<-DESC
                   react-native-appmetrica-yandex
                    DESC
-  s.homepage     = "https://github.com/github_account/react-native-yandex-appmetrica"
+  s.homepage     = "https://github.com/ARDcode/react-native-appmetrica-yandex"
   s.license      = "MIT"
   # s.license    = { :type => "MIT", :file => "FILE_LICENSE" }
-  s.authors      = { "Your Name" => "yourname@email.com" }
+  s.authors      = { "ARDCode" => "codeard@gmail.com" }
   s.platform     = :ios, "7.0"
-  s.source       = { :git => "https://github.com/github_account/react-native-yandex-appmetrica.git", :tag => "#{s.version}" }
+  s.source       = { :git => "https://github.com/ARDcode/react-native-appmetrica-yandex.git", :tag => "#{s.version}" }
 
   s.source_files = "ios/**/*.{h,m}"
   s.requires_arc = true
