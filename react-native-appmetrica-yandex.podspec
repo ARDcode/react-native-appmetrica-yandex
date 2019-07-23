@@ -14,7 +14,7 @@ Pod::Spec.new do |s|
   # s.license    = { :type => "MIT", :file => "FILE_LICENSE" }
   s.authors      = { "ARDCode" => "codeard@gmail.com" }
   s.platform     = :ios, "7.0"
-  s.source       = { :git => "https://github.com/ARDcode/react-native-appmetrica-yandex.git", :tag => "#{s.version}" }
+  s.source       = { :git => "https://github.com/ARDcode/react-native-appmetrica-yandex.git" }
 
   s.source_files = "ios/**/*.{h,m}"
   s.requires_arc = true
