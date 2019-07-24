@@ -63,7 +63,7 @@ YandexMetrica.reportEvent('My event', { foo: 'bar' });
 
 // Send a custom error event and additional parameters (optional).
 YandexMetrica.reportError('My error');
-YandexMetrica.reportEvent('My error', 'Test');
-YandexMetrica.reportEvent('My error', { foo: 'bar' });
-YandexMetrica.reportEvent('My error', new Error('test'));
+YandexMetrica.reportError('My error', 'Test');
+YandexMetrica.reportError('My error', { foo: 'bar' });
+YandexMetrica.reportError('My error', new Error('test'));
 ```
