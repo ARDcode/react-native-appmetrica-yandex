@@ -48,3 +48,22 @@ yarn add react-native-appmetrica-yandex
        
     **RN>=0.60**:
     With React Native 0.60 and later, linking is done automatically
+## Usage
+
+```js
+import { YandexMetrica } from 'react-native-appmetrica-yandex';
+
+// Initialize
+YandexMetrica.activateWithApiKey('KEY');
+
+// Sends a custom event message and additional parameters (optional).
+YandexMetrica.reportEvent('My event');
+YandexMetrica.reportEvent('My event', 'Test');
+YandexMetrica.reportEvent('My event', { foo: 'bar' });
+
+// Send a custom error event and additional parameters (optional).
+YandexMetrica.reportError('My error');
+YandexMetrica.reportEvent('My error', 'Test');
+YandexMetrica.reportEvent('My error', { foo: 'bar' });
+YandexMetrica.reportEvent('My error', new Error('test'));
+```
