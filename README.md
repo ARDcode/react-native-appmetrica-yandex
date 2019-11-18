@@ -32,7 +32,7 @@ yarn add react-native-appmetrica-yandex
 
     **RN<0.60**:
     
-    2.1. Open up `android/app/src/main/java/[...]/MainActivity.java`
+    2.1. Open up `android/app/src/main/java/[...]/MainApplication.java`
       - Add `import com.codeard.yandexmetrica.YandexAppmetricaPackage;` to the imports at the top of the file
       - Add `new YandexAppmetricaPackage()` to the list returned by the `getPackages()` method
       
