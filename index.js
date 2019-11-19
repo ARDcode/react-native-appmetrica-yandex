@@ -4,12 +4,6 @@ const {YandexAppmetrica} = NativeModules;
 
 export default YandexAppmetrica;
 
-type ActivationConfig = {
-    apiKey: string,
-    sessionTimeout?: number,
-    firstActivationAsUpdate?: boolean,
-};
-
 export class YandexMetrica {
     static activateWithApiKey(apiKey) {
         YandexAppmetrica.activateWithApiKey(apiKey);
@@ -19,7 +13,7 @@ export class YandexMetrica {
      * Starts the statistics collection process using config.
      * @param {object} params
      */
-    activateWithConfig(params: ActivationConfig) {
+    activateWithConfig(params: Object) {
         AppMetrica.activateWithConfig(params);
     }
 
