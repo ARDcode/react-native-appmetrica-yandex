@@ -57,6 +57,14 @@ import { YandexMetrica } from 'react-native-appmetrica-yandex';
 // Initialize
 YandexMetrica.activateWithApiKey('KEY');
 
+// OR
+YandexMetrica.activateWithConfig({
+  apiKey: 'KEY',
+  sessionTimeout: 120,
+  firstActivationAsUpdate: true,
+});
+
+
 // Sends a custom event message and additional parameters (optional).
 YandexMetrica.reportEvent('My event');
 YandexMetrica.reportEvent('My event', 'Test');

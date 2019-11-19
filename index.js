@@ -4,9 +4,23 @@ const {YandexAppmetrica} = NativeModules;
 
 export default YandexAppmetrica;
 
+type ActivationConfig = {
+    apiKey: string,
+    sessionTimeout?: number,
+    firstActivationAsUpdate?: boolean,
+};
+
 export class YandexMetrica {
     static activateWithApiKey(apiKey) {
         YandexAppmetrica.activateWithApiKey(apiKey);
+    }
+
+    /**
+     * Starts the statistics collection process using config.
+     * @param {object} params
+     */
+    activateWithConfig(params: ActivationConfig) {
+        AppMetrica.activateWithConfig(params);
     }
 
     /**
@@ -33,5 +47,13 @@ export class YandexMetrica {
      */
     static reportError(name: string, exception: string | Object) {
         YandexAppmetrica.reportError(name, exception);
+    }
+
+    /**
+     * Sets the ID of the user profile.
+     * @param {string} userProfileId
+     */
+    setUserProfileID(userProfileId: string) {
+        AppMetrica.setUserProfileID(userProfileId);
     }
 }

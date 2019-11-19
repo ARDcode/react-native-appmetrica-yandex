@@ -15,6 +15,17 @@ RCT_EXPORT_METHOD(activateWithApiKey:(NSString *)apiKey)
     [YMMYandexMetrica activateWithConfiguration:configuration];
 }
 
+RCT_EXPORT_METHOD(activateWithConfig:(NSDictionary *)config) {
+    YMMYandexMetricaConfiguration *configuration = [[YMMYandexMetricaConfiguration alloc] initWithApiKey:config[@"apiKey"]];
+    if (config[@"sessionTimeout"] != (id)[NSNull null]) {
+        [configuration setSessionTimeout:[config[@"sessionTimeout"] intValue]];
+    }
+    if (config[@"firstActivationAsUpdate"] != (id)[NSNull null]) {
+        [configuration setHandleFirstActivationAsUpdate:[config[@"firstActivationAsUpdate"] boolValue]];
+    }
+    [YMMYandexMetrica activateWithConfiguration:configuration];
+}
+
 RCT_EXPORT_METHOD(reportEvent:(NSString *)message)
 {
     [YMMYandexMetrica reportEvent:message onFailure:NULL];
@@ -28,6 +39,10 @@ RCT_EXPORT_METHOD(reportEvent:(NSString *)message params:(nullable NSDictionary 
 RCT_EXPORT_METHOD(reportError:(NSString *)message exception:(nullable NSString *) exceptionText) {
     NSException *exception = [[NSException alloc] initWithName:exceptionText reason:nil userInfo:nil];
     [YMMYandexMetrica reportError:message exception:exception onFailure:NULL];
+}
+
+RCT_EXPORT_METHOD(setUserProfileID:(NSString *)userProfileID) {
+    [YMMYandexMetrica setUserProfileID:userProfileID];
 }
 
 @end
