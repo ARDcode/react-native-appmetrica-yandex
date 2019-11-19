@@ -210,6 +210,10 @@ public class YandexAppmetricaModule extends ReactContextBaseJavaModule {
              }
          }
 
+         if (params.hasKey("userProfileId")) {
+             YandexMetrica.setUserProfileID(params.getString("userProfileId"));
+          }
+
          YandexMetrica.reportUserProfile(userProfileBuilder.build());
      }
 
