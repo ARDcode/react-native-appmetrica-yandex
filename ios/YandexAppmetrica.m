@@ -44,12 +44,20 @@ RCT_EXPORT_METHOD(reportError:(NSString *)message exception:(nullable NSString *
 RCT_EXPORT_METHOD(setUserProfileAttributes:(NSDictionary *)userConfig) {
     YMMMutableUserProfile *profile = [[YMMMutableUserProfile alloc] init];
 
-    if (userConfig[@"name"] != nil && [userConfig[@"name"] length] > 0) {
-        [profile apply:[[YMMProfileAttribute name] withValue:userConfig[@"name"]]];
-    }
-
-    if (userConfig[@"age"] != nil) {
-        [profile apply:[[YMMProfileAttribute birthDate] withAge:userConfig[@"age"]]];
+    for (NSString *key in userConfig) {
+        if ([key isEqual: @"name"] && userConfig[@"name"] != nil && [userConfig[@"name"] length] > 0) {
+            [profile apply:[[YMMProfileAttribute name] withValue:userConfig[key]]];
+        } else if ([key isEqual: @"age"] && userConfig[@"age"] != nil) {
+            [profile apply:[[YMMProfileAttribute birthDate] withAge:(NSUInteger)userConfig[key]]];
+        } else if (userConfig[key] != nil) {
+            if ([userConfig[key] isEqual: @YES] || [userConfig[key] isEqual: @NO]) {
+                [profile apply:[[YMMProfileAttribute customBool:key] withValue:[userConfig[key] boolValue]]];
+            } else if ([userConfig[key] isKindOfClass:[NSNumber class]]) {
+                [profile apply:[[YMMProfileAttribute customNumber:key] withValue:[userConfig[key] doubleValue]]];
+            } else if ([userConfig[key] isKindOfClass:[NSString class]]) {
+                [profile apply:[[YMMProfileAttribute customString:key] withValue:userConfig[key]]];
+            }
+        }
     }
 
     [YMMYandexMetrica setUserProfileID:userConfig[@"userProfileId"]];
