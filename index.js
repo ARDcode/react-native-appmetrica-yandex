@@ -13,7 +13,7 @@ export class YandexMetrica {
      * Starts the statistics collection process using config.
      * @param {object} params
      */
-    activateWithConfig(params: Object) {
+    static activateWithConfig(params: Object) {
         AppMetrica.activateWithConfig(params);
     }
 
@@ -47,7 +47,7 @@ export class YandexMetrica {
      * Sets the ID of the user profile.
      * @param {string} userProfileId
      */
-    setUserProfileID(userProfileId: string) {
+    static setUserProfileID(userProfileId: string) {
         AppMetrica.setUserProfileID(userProfileId);
     }
 }
