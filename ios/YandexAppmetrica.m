@@ -45,11 +45,11 @@ RCT_EXPORT_METHOD(setUserProfileAttributes:(NSDictionary *)userConfig) {
     YMMMutableUserProfile *profile = [[YMMMutableUserProfile alloc] init];
 
     if (userConfig[@"name"] != (id)[NSNull null]) {
-        [profile apply:[[YMMProfileAttribute name] withValue:[userConfig[@"name"]]];
+        [profile apply:[YMMProfileAttribute name] withValue:[userConfig[@"name"]];
     }
 
     if (userConfig[@"age"] != (id)[NSNull null]) {
-        [profile apply:[[YMMProfileAttribute birthDate] withAge:[userConfig[@"age"]]];
+        [profile apply:[YMMProfileAttribute birthDate] withAge:[userConfig[@"age"]];
     }
 
     [YMMYandexMetrica setUserProfileID:[userConfig[@"userProfileId"]]];
