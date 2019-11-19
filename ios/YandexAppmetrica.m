@@ -41,7 +41,7 @@ RCT_EXPORT_METHOD(reportError:(NSString *)message exception:(nullable NSString *
     [YMMYandexMetrica reportError:message exception:exception onFailure:NULL];
 }
 
-RCT_EXPORT_METHOD(setUserProfileAttributes:(NSString *)userConfig) {
+RCT_EXPORT_METHOD(setUserProfileAttributes:(NSDictionary *)userConfig) {
     YMMMutableUserProfile *profile = [[YMMMutableUserProfile alloc] init];
 
     if (userConfig[@"name"] != (id)[NSNull null]) {
