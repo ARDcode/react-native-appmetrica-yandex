@@ -65,9 +65,7 @@ RCT_EXPORT_METHOD(setUserProfileAttributes:(NSDictionary *)userConfig) {
     }
 
     // Sending profile attributes.
-    [YMMYandexMetrica reportUserProfile:[profile copy] onFailure:^(NSError *error) {
-        NSLog(@"Error: %@", error);
-    }];
+    [YMMYandexMetrica reportUserProfile:[profile copy] onFailure:NULL];
 }
 
 @end
