@@ -45,6 +45,23 @@ public class YandexAppmetricaModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void activateWithConfig(ReadableMap params) {
+        YandexMetricaConfig.Builder configBuilder = YandexMetricaConfig.newConfigBuilder(params.getString("apiKey"));
+        if (params.hasKey("sessionTimeout")) {
+            configBuilder.withSessionTimeout(params.getInt("sessionTimeout"));
+        }
+        if (params.hasKey("firstActivationAsUpdate")) {
+            configBuilder.handleFirstActivationAsUpdate(params.getBoolean("firstActivationAsUpdate"));
+        }
+        YandexMetrica.activate(getReactApplicationContext().getApplicationContext(), configBuilder.build());
+        Activity activity = getCurrentActivity();
+        if (activity != null) {
+            Application application = activity.getApplication();
+            YandexMetrica.enableActivityAutoTracking(application);
+        }
+    }
+
+    @ReactMethod
     public void reportEvent(String message, @Nullable ReadableMap params) {
         try {
             if (params != null) {
@@ -74,6 +91,11 @@ public class YandexAppmetricaModule extends ReactContextBaseJavaModule {
             exception = new Throwable(convertReadableMapToJson(exceptionError));
         }
         YandexMetrica.reportError(message, exception);
+    }
+
+    @ReactMethod
+    public void setUserProfileID(String profileID) {
+        YandexMetrica.setUserProfileID(profileID);
     }
 
     private String convertReadableMapToJson(final ReadableMap readableMap) {

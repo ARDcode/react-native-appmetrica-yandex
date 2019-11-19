@@ -10,6 +10,14 @@ export class YandexMetrica {
     }
 
     /**
+     * Starts the statistics collection process using config.
+     * @param {object} params
+     */
+    static activateWithConfig(params: Object) {
+        YandexAppmetrica.activateWithConfig(params);
+    }
+
+    /**
      * Sends a custom event message and additional parameters (optional).
      * @param {string} message
      */
@@ -33,5 +41,13 @@ export class YandexMetrica {
      */
     static reportError(name: string, exception: string | Object) {
         YandexAppmetrica.reportError(name, exception);
+    }
+
+    /**
+     * Sets the ID of the user profile.
+     * @param {string} userProfileId
+     */
+    static setUserProfileID(userProfileId: string) {
+        YandexAppmetrica.setUserProfileID(userProfileId);
     }
 }

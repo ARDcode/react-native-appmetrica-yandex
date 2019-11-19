@@ -16,7 +16,7 @@ yarn add react-native-appmetrica-yandex
 
     ```sh
     pod 'react-native-appmetrica-yandex', :path => '../node_modules/react-native-appmetrica-yandex'
-    pod 'YandexMobileMetrica', '3.7.1'
+    pod 'YandexMobileMetrica', '3.8.2'
     ```
 
     Then run `pod install`.
@@ -56,6 +56,14 @@ import { YandexMetrica } from 'react-native-appmetrica-yandex';
 
 // Initialize
 YandexMetrica.activateWithApiKey('KEY');
+
+// OR
+YandexMetrica.activateWithConfig({
+  apiKey: 'KEY',
+  sessionTimeout: 120,
+  firstActivationAsUpdate: true,
+});
+
 
 // Sends a custom event message and additional parameters (optional).
 YandexMetrica.reportEvent('My event');
