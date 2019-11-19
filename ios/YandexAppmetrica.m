@@ -44,6 +44,11 @@ RCT_EXPORT_METHOD(reportError:(NSString *)message exception:(nullable NSString *
 RCT_EXPORT_METHOD(setUserProfileAttributes:(NSDictionary *)attributes) {
     YMMMutableUserProfile *profile = [[YMMMutableUserProfile alloc] init];
     NSMutableArray *attrsArray = [NSMutableArray array];
+
+    if (attributes[@"userProfileId"] != nil) {
+        [YMMYandexMetrica setUserProfileID:attributes[@"userProfileId"]];
+    }
+
     for (NSString* key in attributes) {
         // predefined attributes
         if ([key isEqual: @"name"]) {
@@ -106,10 +111,6 @@ RCT_EXPORT_METHOD(setUserProfileAttributes:(NSDictionary *)attributes) {
                 }
             }
         }
-    }
-
-    if (attributes[@"userProfileId"] != nil) {
-       [YMMYandexMetrica setUserProfileID:attributes[@"userProfileId"]];
     }
 
     [profile applyFromArray: attrsArray];
