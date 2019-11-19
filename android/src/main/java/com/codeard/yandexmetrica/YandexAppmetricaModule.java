@@ -14,6 +14,8 @@ import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.ReadableMapKeySetIterator;
 import com.yandex.metrica.YandexMetrica;
 import com.yandex.metrica.YandexMetricaConfig;
+import com.yandex.metrica.profile.UserProfile;
+import com.yandex.metrica.profile.Attribute;
 
 import org.json.JSONObject;
 
@@ -95,17 +97,19 @@ public class YandexAppmetricaModule extends ReactContextBaseJavaModule {
 
      @ReactMethod
      public void setUserProfileAttributes(ReadableMap userConfig) {
-         UserProfile userProfile = UserProfile.newBuilder();
+         UserProfile.Builder userProfileBuilder = UserProfile.newBuilder();
 
-         if (params.hasKey('name')) {
-            userProfile.apply(Attribute.name().withValue(userConfig.getString('name'))
+         if (userConfig.hasKey("name")) {
+            userProfileBuilder.apply(Attribute.name().withValue(userConfig.getString("name")));
          }
 
-         if (params.hasKey('age')) {
-            userProfile.apply(Attribute.birthDate().withAge(userConfig.getString('age'))
+         if (userConfig.hasKey("age")) {
+            userProfileBuilder.apply(Attribute.birthDate().withAge(userConfig.getInt("age")));
          }
 
-         YandexMetrica.setUserProfileID(userConfig.getString('userProfileId');
+         YandexMetrica.setUserProfileID(userConfig.getString("userProfileId"));
+
+         YandexMetrica.reportUserProfile(userProfileBuilder.build());
      }
 
     private String convertReadableMapToJson(final ReadableMap readableMap) {
