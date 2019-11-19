@@ -9,9 +9,12 @@ declare module 'react-native-appmetrica-yandex' {
 
     type userProfileConfig = {
         userProfileId?: string,
-        age?: number,
         name?: string,
-        [key: string]: string | number | boolean
+        gender?: 'female' | 'male' | string | void,
+        age?: number,
+        birthDate?: Date | [number] | [number, number] | [number, number, number] | void,
+        notificationsEnabled?: boolean,
+        [key: string]: string | number | boolean,
     }
 
     export class YandexMetrica extends React.Component {

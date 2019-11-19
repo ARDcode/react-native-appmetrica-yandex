@@ -47,7 +47,19 @@ export class YandexMetrica {
      * Sets the ID of the user profile.
      * @param {string} userProfileId
      */
-    static setUserProfileAttributes(params: Object) {
-        YandexAppmetrica.setUserProfileAttributes(params);
-    }
+    static setUserProfileAttributes(attributes: Object) {
+        const readyAttributes = {};
+        Object.keys(attributes).forEach(key => {
+            if (
+              key === 'birthDate' &&
+              typeof attributes.birthDate === 'object' &&
+              typeof attributes.birthDate.getTime === 'function'
+            ) {
+                readyAttributes.birthDate = attributes.birthDate.getTime();
+            } else {
+                readyAttributes[key] = attributes[key];
+            }
+        });
+        YandexAppmetrica.setUserProfileAttributes(readyAttributes);
+    },
 }

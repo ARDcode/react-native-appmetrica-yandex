@@ -96,36 +96,118 @@ public class YandexAppmetricaModule extends ReactContextBaseJavaModule {
     }
 
      @ReactMethod
-     public void setUserProfileAttributes(ReadableMap userConfig) {
+     public void setUserProfileAttributes(ReadableMap params) {
          UserProfile.Builder userProfileBuilder = UserProfile.newBuilder();
-         ReadableMapKeySetIterator iterator = userConfig.keySetIterator();
+         ReadableMapKeySetIterator iterator = params.keySetIterator();
 
          while (iterator.hasNextKey()) {
-            String key = iterator.nextKey();
+             String key = iterator.nextKey();
 
-            switch (key) {
-                case "name":
-                    userProfileBuilder.apply(Attribute.name().withValue(userConfig.getString("name")));
-                    break;
-                case "age":
-                    userProfileBuilder.apply(Attribute.birthDate().withAge(userConfig.getInt("age")));
-                    break;
-                default:
-                    switch (userConfig.getType(key)) {
-                        case Boolean:
-                           userProfileBuilder.apply(Attribute.customBoolean(key).withValue(userConfig.getBoolean(key)));
-                           break;
-                       case Number:
-                           userProfileBuilder.apply(Attribute.customNumber(key).withValue(userConfig.getDouble(key)));
-                           break;
-                       case String:
-                           userProfileBuilder.apply(Attribute.customString(key).withValue(userConfig.getString(key)));
-                    }
-            }
-         }
-
-         if (userConfig.hasKey("userProfileId")) {
-            YandexMetrica.setUserProfileID(userConfig.getString("userProfileId"));
+             switch (key) {
+                 // predefined attributes
+                 case "name":
+                     userProfileBuilder.apply(
+                       params.isNull(key)
+                         ? Attribute.name().withValueReset()
+                         : Attribute.name().withValue(params.getString(key))
+                     );
+                     break;
+                 case "gender":
+                     // FIXME: can't access Gender
+                     // userProfileBuilder.apply(
+                     //   params.isNull(key)
+                     //     ? Attribute.gender().withValueReset()
+                     //     : Attribute.gender().withValue(
+                     //         params.getString(key).equals("female")
+                     //           ? GenderAttribute.Gender.FEMALE
+                     //           : params.getString(key).equals("male")
+                     //             ? GenderAttribute.Gender.MALE
+                     //             : GenderAttribute.Gender.OTHER
+                     //       )
+                     // );
+                     break;
+                 case "age":
+                     userProfileBuilder.apply(
+                       params.isNull(key)
+                         ? Attribute.birthDate().withValueReset()
+                         : Attribute.birthDate().withAge(params.getInt(key))
+                     );
+                     break;
+                 case "birthDate":
+                     if (params.isNull(key)) {
+                         userProfileBuilder.apply(
+                           Attribute.birthDate().withValueReset()
+                         );
+                     } else if (params.getType(key) == Array) {
+                         // an array of [ year[, month][, day] ]
+                         ReadableArray date = params.getArray(key);
+                         if (date.size() == 1) {
+                             userProfileBuilder.apply(
+                               Attribute.birthDate().withBirthDate(
+                                 date.getInt(0)
+                               )
+                             );
+                         } else if (date.size() == 2) {
+                             userProfileBuilder.apply(
+                               Attribute.birthDate().withBirthDate(
+                                 date.getInt(0),
+                                 date.getInt(1)
+                               )
+                             );
+                         } else {
+                             userProfileBuilder.apply(
+                               Attribute.birthDate().withBirthDate(
+                                 date.getInt(0),
+                                 date.getInt(1),
+                                 date.getInt(2)
+                               )
+                             );
+                         }
+                     } else {
+                         // number of milliseconds since Unix epoch
+                         Date date = new Date((long)params.getInt(key));
+                         Calendar cal = Calendar.getInstance();
+                         cal.setTime(date);
+                         userProfileBuilder.apply(
+                           Attribute.birthDate().withBirthDate(cal)
+                         );
+                     }
+                     break;
+                 case "notificationsEnabled":
+                     userProfileBuilder.apply(
+                       params.isNull(key)
+                         ? Attribute.notificationsEnabled().withValueReset()
+                         : Attribute.notificationsEnabled().withValue(params.getBoolean(key))
+                     );
+                     break;
+                 // custom attributes
+                 default:
+                     // TODO: come up with a syntax solution to reset custom attributes. `null` will break type checking here
+                     switch (params.getType(key)) {
+                         case Boolean:
+                             userProfileBuilder.apply(
+                               Attribute.customBoolean(key).withValue(params.getBoolean(key))
+                             );
+                             break;
+                         case Number:
+                             userProfileBuilder.apply(
+                               Attribute.customNumber(key).withValue(params.getDouble(key))
+                             );
+                             break;
+                         case String:
+                             String value = params.getString(key);
+                             if (value.startsWith("+") || value.startsWith("-")) {
+                                 userProfileBuilder.apply(
+                                   Attribute.customCounter(key).withDelta(Double.parseDouble(value))
+                                 );
+                             } else {
+                                 userProfileBuilder.apply(
+                                   Attribute.customString(key).withValue(value)
+                                 );
+                             }
+                             break;
+                     }
+             }
          }
 
          YandexMetrica.reportUserProfile(userProfileBuilder.build());
