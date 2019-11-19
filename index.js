@@ -14,7 +14,7 @@ export class YandexMetrica {
      * @param {object} params
      */
     static activateWithConfig(params: Object) {
-        AppMetrica.activateWithConfig(params);
+        YandexAppmetrica.activateWithConfig(params);
     }
 
     /**
@@ -48,6 +48,6 @@ export class YandexMetrica {
      * @param {string} userProfileId
      */
     static setUserProfileID(userProfileId: string) {
-        AppMetrica.setUserProfileID(userProfileId);
+        YandexAppmetrica.setUserProfileID(userProfileId);
     }
 }
