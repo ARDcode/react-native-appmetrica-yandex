@@ -124,15 +124,9 @@ public class YandexAppmetricaModule extends ReactContextBaseJavaModule {
             }
          }
 
-         if (userConfig.hasKey("name")) {
-            userProfileBuilder.apply(Attribute.name().withValue(userConfig.getString("name")));
+         if (userConfig.hasKey("userProfileId")) {
+            YandexMetrica.setUserProfileID(userConfig.getString("userProfileId"));
          }
-
-         if (userConfig.hasKey("age")) {
-            userProfileBuilder.apply(Attribute.birthDate().withAge(userConfig.getInt("age")));
-         }
-
-         YandexMetrica.setUserProfileID(userConfig.getString("userProfileId"));
 
          YandexMetrica.reportUserProfile(userProfileBuilder.build());
      }

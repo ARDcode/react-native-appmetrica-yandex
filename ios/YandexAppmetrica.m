@@ -60,7 +60,9 @@ RCT_EXPORT_METHOD(setUserProfileAttributes:(NSDictionary *)userConfig) {
         }
     }
 
-    [YMMYandexMetrica setUserProfileID:userConfig[@"userProfileId"]];
+    if ([userConfig[@"userProfileId"] isKindOfClass:[NSString class]]) {
+        [YMMYandexMetrica setUserProfileID:userConfig[@"userProfileId"]];
+    }
 
     // Sending profile attributes.
     [YMMYandexMetrica reportUserProfile:[profile copy] onFailure:^(NSError *error) {
