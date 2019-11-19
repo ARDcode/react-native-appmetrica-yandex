@@ -17,10 +17,10 @@ RCT_EXPORT_METHOD(activateWithApiKey:(NSString *)apiKey)
 
 RCT_EXPORT_METHOD(activateWithConfig:(NSDictionary *)config) {
     YMMYandexMetricaConfiguration *configuration = [[YMMYandexMetricaConfiguration alloc] initWithApiKey:config[@"apiKey"]];
-    if (config[@"sessionTimeout"] != (id)[NSNull null]) {
+    if (config[@"sessionTimeout"] != (id)nil) {
         [configuration setSessionTimeout:[config[@"sessionTimeout"] intValue]];
     }
-    if (config[@"firstActivationAsUpdate"] != (id)[NSNull null]) {
+    if (config[@"firstActivationAsUpdate"] != (id)nil) {
         [configuration setHandleFirstActivationAsUpdate:[config[@"firstActivationAsUpdate"] boolValue]];
     }
     [YMMYandexMetrica activateWithConfiguration:configuration];
@@ -47,25 +47,25 @@ RCT_EXPORT_METHOD(setUserProfileAttributes:(NSDictionary *)attributes) {
     for (NSString* key in attributes) {
         // predefined attributes
         if ([key isEqual: @"name"]) {
-            if (attributes[key] == [NSNull null]) {
+            if (attributes[key] == nil) {
                 [attrsArray addObject:[[YMMProfileAttribute name] withValueReset]];
             } else {
                 [attrsArray addObject:[[YMMProfileAttribute name] withValue:[attributes[key] stringValue]]];
             }
         } else if ([key isEqual: @"gender"]) {
-            if (attributes[key] == [NSNull null]) {
+            if (attributes[key] == nil) {
                 [attrsArray addObject:[[YMMProfileAttribute gender] withValueReset]];
             } else {
                 [attrsArray addObject:[[YMMProfileAttribute gender] withValue:[[attributes[key] stringValue] isEqual: @"female"] ? YMMGenderTypeFemale : [[attributes[key] stringValue] isEqual: @"male"] ? YMMGenderTypeMale : YMMGenderTypeOther]];
             }
         } else if ([key isEqual: @"age"]) {
-            if (attributes[key] == [NSNull null]) {
+            if (attributes[key] == nil) {
                 [attrsArray addObject:[[YMMProfileAttribute birthDate] withValueReset]];
             } else {
                 [attrsArray addObject:[[YMMProfileAttribute birthDate] withAge:[attributes[key] intValue]]];
             }
         } else if ([key isEqual: @"birthDate"]) {
-            if (attributes[key] == [NSNull null]) {
+            if (attributes[key] == nil) {
                 [attrsArray addObject:[[YMMProfileAttribute birthDate] withValueReset]];
             } else if ([attributes[key] isKindOfClass:[NSArray class]]) {
                 NSArray *date = [attributes[key] array];
@@ -85,7 +85,7 @@ RCT_EXPORT_METHOD(setUserProfileAttributes:(NSDictionary *)attributes) {
                 [attrsArray addObject:[[YMMProfileAttribute birthDate] withDateComponents:dateComponents]];
             }
         } else if ([key isEqual: @"notificationsEnabled"]) {
-            if (attributes[key] == [NSNull null]) {
+            if (attributes[key] == nil) {
                 [attrsArray addObject:[[YMMProfileAttribute notificationsEnabled] withValueReset]];
             } else {
                 [attrsArray addObject:[[YMMProfileAttribute notificationsEnabled] withValue:[attributes[key] boolValue]]];
@@ -108,7 +108,7 @@ RCT_EXPORT_METHOD(setUserProfileAttributes:(NSDictionary *)attributes) {
         }
     }
 
-    if (attributes[@"userProfileId"] != [NSNull null]) {
+    if (attributes[@"userProfileId"] != nil) {
        [YMMYandexMetrica setUserProfileID:attributes[@"userProfileId"]];
     }
 
