@@ -7,6 +7,12 @@ declare module 'react-native-appmetrica-yandex' {
         firstActivationAsUpdate?: boolean,
     };
 
+    type userProfileConfig = {
+        userProfileId: string,
+        age: number,
+        name: string,
+    }
+
     export class YandexMetrica extends React.Component {
         public static activateWithApiKey(apiKey: string);
 
@@ -18,6 +24,6 @@ declare module 'react-native-appmetrica-yandex' {
 
         public static reportError(name: string, exception?: string | Object);
 
-        public static setUserProfileID(userProfileId: string);
+        public static setUserProfileAttributes(params: userProfileConfig);
     }
 }

@@ -41,8 +41,23 @@ RCT_EXPORT_METHOD(reportError:(NSString *)message exception:(nullable NSString *
     [YMMYandexMetrica reportError:message exception:exception onFailure:NULL];
 }
 
-RCT_EXPORT_METHOD(setUserProfileID:(NSString *)userProfileID) {
-    [YMMYandexMetrica setUserProfileID:userProfileID];
+RCT_EXPORT_METHOD(setUserProfileAttributes:(NSString *)userConfig) {
+    YMMMutableUserProfile *profile = [[YMMMutableUserProfile alloc] init];
+
+    if (userConfig[@"name"] != (id)[NSNull null]) {
+        [profile apply:[[YMMProfileAttribute name] withValue:[userConfig[@"name"]]];
+    }
+
+    if (userConfig[@"age"] != (id)[NSNull null]) {
+        [profile apply:[[YMMProfileAttribute birthDate] withAge:[userConfig[@"age"]]];
+    }
+
+    [YMMYandexMetrica setUserProfileID:[userConfig[@"userProfileId"]]];
+
+    // Sending profile attributes.
+    [YMMYandexMetrica reportUserProfile:[profile copy] onFailure:^(NSError *error) {
+        NSLog(@"Error: %@", error);
+    }];
 }
 
 @end
