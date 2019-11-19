@@ -98,6 +98,31 @@ public class YandexAppmetricaModule extends ReactContextBaseJavaModule {
      @ReactMethod
      public void setUserProfileAttributes(ReadableMap userConfig) {
          UserProfile.Builder userProfileBuilder = UserProfile.newBuilder();
+         ReadableMapKeySetIterator iterator = userConfig.keySetIterator();
+
+         while (iterator.hasNextKey()) {
+            String key = iterator.nextKey();
+
+            switch (key) {
+                case "name":
+                    userProfileBuilder.apply(Attribute.name().withValue(userConfig.getString("name")));
+                    break;
+                case "age":
+                    userProfileBuilder.apply(Attribute.birthDate().withAge(userConfig.getInt("age")));
+                    break;
+                default:
+                    switch (userConfig.getType(key)) {
+                        case Boolean:
+                           userProfileBuilder.apply(Attribute.customBoolean().withValue(userConfig.getBoolean(key)));
+                           break;
+                       case Number:
+                           userProfileBuilder.apply(Attribute.customNumber().withValue(userConfig.getDouble(key)));
+                           break;
+                       case String:
+                           userProfileBuilder.apply(Attribute.customString().withValue(userConfig.getString(key)));
+                    }
+            }
+         }
 
          if (userConfig.hasKey("name")) {
             userProfileBuilder.apply(Attribute.name().withValue(userConfig.getString("name")));
