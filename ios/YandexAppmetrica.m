@@ -44,8 +44,12 @@ RCT_EXPORT_METHOD(reportError:(NSString *)message exception:(nullable NSString *
 RCT_EXPORT_METHOD(setUserProfileAttributes:(NSDictionary *)userConfig) {
     YMMMutableUserProfile *profile = [[YMMMutableUserProfile alloc] init];
 
-    if (userConfig[@"name"] != (id)[NSNull null]) {
-        [profile apply:[[YMMProfileAttribute name] withValue:userConfig[@"name"]]]
+    if (userConfig[@"name"] != nil && [userConfig[@"name"] length] > 0) {
+        [profile apply:[[YMMProfileAttribute name] withValue:userConfig[@"name"]]];
+    }
+
+    if (userConfig[@"age"] != nil) {
+        [profile apply:[[YMMProfileAttribute birthDate] withAge:userConfig[@"age"]]];
     }
 
     [YMMYandexMetrica setUserProfileID:userConfig[@"userProfileId"]];
