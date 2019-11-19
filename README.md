@@ -16,7 +16,7 @@ yarn add react-native-appmetrica-yandex
 
     ```sh
     pod 'react-native-appmetrica-yandex', :path => '../node_modules/react-native-appmetrica-yandex'
-    pod 'YandexMobileMetrica', '3.7.1'
+    pod 'YandexMobileMetrica', '3.8.2'
     ```
 
     Then run `pod install`.
