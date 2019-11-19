@@ -61,5 +61,5 @@ export class YandexMetrica {
             }
         });
         YandexAppmetrica.setUserProfileAttributes(readyAttributes);
-    },
+    }
 }
