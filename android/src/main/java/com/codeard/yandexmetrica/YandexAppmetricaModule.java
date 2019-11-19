@@ -113,13 +113,13 @@ public class YandexAppmetricaModule extends ReactContextBaseJavaModule {
                 default:
                     switch (userConfig.getType(key)) {
                         case Boolean:
-                           userProfileBuilder.apply(Attribute.customBoolean().withValue(userConfig.getBoolean(key)));
+                           userProfileBuilder.apply(Attribute.customBoolean(key).withValue(userConfig.getBoolean(key)));
                            break;
                        case Number:
-                           userProfileBuilder.apply(Attribute.customNumber().withValue(userConfig.getDouble(key)));
+                           userProfileBuilder.apply(Attribute.customNumber(key).withValue(userConfig.getDouble(key)));
                            break;
                        case String:
-                           userProfileBuilder.apply(Attribute.customString().withValue(userConfig.getString(key)));
+                           userProfileBuilder.apply(Attribute.customString(key).withValue(userConfig.getString(key)));
                     }
             }
          }
