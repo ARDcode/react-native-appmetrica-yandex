@@ -100,6 +100,10 @@ public class YandexAppmetricaModule extends ReactContextBaseJavaModule {
          UserProfile.Builder userProfileBuilder = UserProfile.newBuilder();
          ReadableMapKeySetIterator iterator = params.keySetIterator();
 
+         if (params.hasKey("userProfileId")) {
+             YandexMetrica.setUserProfileID(params.getString("userProfileId"));
+         }
+
          while (iterator.hasNextKey()) {
              String key = iterator.nextKey();
 
@@ -209,10 +213,6 @@ public class YandexAppmetricaModule extends ReactContextBaseJavaModule {
                      }
              }
          }
-
-         if (params.hasKey("userProfileId")) {
-             YandexMetrica.setUserProfileID(params.getString("userProfileId"));
-          }
 
          YandexMetrica.reportUserProfile(userProfileBuilder.build());
      }
