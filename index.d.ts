@@ -9,7 +9,7 @@ declare module 'react-native-appmetrica-yandex' {
 
     type userProfileConfig = {
         userProfileId: string,
-        age: number,
+        age: number | string,
         name: string,
     }
 
