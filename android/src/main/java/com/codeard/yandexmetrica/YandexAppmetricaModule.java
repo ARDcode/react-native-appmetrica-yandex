@@ -2,22 +2,26 @@ package com.codeard.yandexmetrica;
 
 import android.app.Activity;
 import android.app.Application;
+import android.support.annotation.Nullable;
 import android.util.Log;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.ReadableMapKeySetIterator;
+
+import java.lang.Exception;
+import java.util.Calendar;
+import java.util.Date;
+
+import org.json.JSONObject;
+
 import com.yandex.metrica.YandexMetrica;
 import com.yandex.metrica.YandexMetricaConfig;
 import com.yandex.metrica.profile.UserProfile;
 import com.yandex.metrica.profile.Attribute;
-
-import org.json.JSONObject;
 
 public class YandexAppmetricaModule extends ReactContextBaseJavaModule {
 
