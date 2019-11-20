@@ -49,7 +49,7 @@ export class YandexMetrica {
      */
     setUserProfileID(userProfileId: string) {
         YandexAppmetrica.setUserProfileID(userProfileId);
-    },
+    }
 
     /**
      * Sets attributes of the user profile.
