@@ -50,4 +50,24 @@ export class YandexMetrica {
     static setUserProfileID(userProfileId: string) {
         YandexAppmetrica.setUserProfileID(userProfileId);
     }
+
+    /**
+     * Sets attributes of the user profile.
+     * @param {object} attributes
+     */
+    static setUserProfileAttributes(attributes: Object) {
+        const readyAttributes = {};
+        Object.keys(attributes).forEach(key => {
+            if (
+              key === 'birthDate' &&
+              typeof attributes.birthDate === 'object' &&
+              typeof attributes.birthDate.getTime === 'function'
+            ) {
+                readyAttributes.birthDate = attributes.birthDate.getTime();
+            } else {
+                readyAttributes[key] = attributes[key];
+            }
+        });
+        YandexAppmetrica.setUserProfileAttributes(readyAttributes);
+    }
 }
