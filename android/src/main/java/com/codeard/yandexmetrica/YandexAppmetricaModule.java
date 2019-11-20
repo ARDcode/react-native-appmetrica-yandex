@@ -2,8 +2,10 @@ package com.codeard.yandexmetrica;
 
 import android.app.Activity;
 import android.app.Application;
-import android.support.annotation.Nullable;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.support.annotation.Nullable;
 
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
