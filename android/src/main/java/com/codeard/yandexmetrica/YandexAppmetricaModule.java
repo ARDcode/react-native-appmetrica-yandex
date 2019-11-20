@@ -95,14 +95,15 @@ public class YandexAppmetricaModule extends ReactContextBaseJavaModule {
         YandexMetrica.reportError(message, exception);
     }
 
+    @ReactMethod
+    public void setUserProfileID(String profileID) {
+        YandexMetrica.setUserProfileID(profileID);
+    }
+
      @ReactMethod
      public void setUserProfileAttributes(ReadableMap params) {
          UserProfile.Builder userProfileBuilder = UserProfile.newBuilder();
          ReadableMapKeySetIterator iterator = params.keySetIterator();
-
-         if (params.hasKey("userProfileId")) {
-             YandexMetrica.setUserProfileID(params.getString("userProfileId"));
-         }
 
          while (iterator.hasNextKey()) {
              String key = iterator.nextKey();

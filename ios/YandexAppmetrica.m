@@ -41,13 +41,14 @@ RCT_EXPORT_METHOD(reportError:(NSString *)message exception:(nullable NSString *
     [YMMYandexMetrica reportError:message exception:exception onFailure:NULL];
 }
 
+
+RCT_EXPORT_METHOD(setUserProfileID:(NSString *)userProfileID) {
+    [YMMYandexMetrica setUserProfileID:userProfileID];
+}
+
 RCT_EXPORT_METHOD(setUserProfileAttributes:(NSDictionary *)attributes) {
     YMMMutableUserProfile *profile = [[YMMMutableUserProfile alloc] init];
     NSMutableArray *attrsArray = [NSMutableArray array];
-
-    if (attributes[@"userProfileId"] != nil) {
-        [YMMYandexMetrica setUserProfileID:attributes[@"userProfileId"]];
-    }
 
     for (NSString* key in attributes) {
         // predefined attributes

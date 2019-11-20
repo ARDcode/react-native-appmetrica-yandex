@@ -8,7 +8,6 @@ declare module 'react-native-appmetrica-yandex' {
     };
 
     type userProfileConfig = {
-        userProfileId?: string,
         name?: string,
         gender?: 'female' | 'male' | string | void,
         age?: number,
@@ -29,5 +28,7 @@ declare module 'react-native-appmetrica-yandex' {
         public static reportError(name: string, exception?: string | Object);
 
         public static setUserProfileAttributes(params: userProfileConfig);
+
+        public static setUserProfileId(userProfileId: string);
     }
 }
