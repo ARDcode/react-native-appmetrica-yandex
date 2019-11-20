@@ -47,7 +47,7 @@ export class YandexMetrica {
      * Sets the ID of the user profile.
      * @param {string} userProfileId
      */
-    setUserProfileID(userProfileId: string) {
+    static setUserProfileID(userProfileId: string) {
         YandexAppmetrica.setUserProfileID(userProfileId);
     }
 
