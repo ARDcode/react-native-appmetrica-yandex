@@ -5,7 +5,7 @@ import android.app.Application;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -13,10 +13,12 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.ReadableMapKeySetIterator;
+import com.facebook.react.bridge.ReadableType;
 
 import java.lang.Exception;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Arrays;
 
 import org.json.JSONObject;
 
@@ -149,7 +151,7 @@ public class YandexAppmetricaModule extends ReactContextBaseJavaModule {
                          userProfileBuilder.apply(
                            Attribute.birthDate().withValueReset()
                          );
-                     } else if (params.getType(key) == Array) {
+                     } else if (params.getType(key) == ReadableType.Array) {
                          // an array of [ year[, month][, day] ]
                          ReadableArray date = params.getArray(key);
                          if (date.size() == 1) {
