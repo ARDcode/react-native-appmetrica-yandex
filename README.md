@@ -65,6 +65,10 @@ YandexMetrica.activateWithConfig({
 });
 
 
+YandexMetrica.setUserProfileID('12345');
+
+YandexMetrica.setUserProfileAttributes({ ... })
+
 // Sends a custom event message and additional parameters (optional).
 YandexMetrica.reportEvent('My event');
 YandexMetrica.reportEvent('My event', 'Test');

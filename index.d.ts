@@ -29,6 +29,6 @@ declare module 'react-native-appmetrica-yandex' {
 
         public static setUserProfileAttributes(params: userProfileConfig);
 
-        public static setUserProfileId(userProfileId: string);
+        public static setUserProfileID(userProfileId: string);
     }
 }
