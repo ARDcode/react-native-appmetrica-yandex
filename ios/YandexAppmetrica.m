@@ -56,7 +56,7 @@ RCT_EXPORT_METHOD(setUserProfileAttributes:(NSDictionary *)attributes) {
             if (attributes[key] == nil) {
                 [attrsArray addObject:[[YMMProfileAttribute name] withValueReset]];
             } else {
-                [attrsArray addObject:[[YMMProfileAttribute name] withValue:[attributes[key] stringValue]]];
+                [attrsArray addObject:[[YMMProfileAttribute name] withValue: attributes[key]]];
             }
         } else if ([key isEqual: @"gender"]) {
             if (attributes[key] == nil) {
@@ -97,6 +97,9 @@ RCT_EXPORT_METHOD(setUserProfileAttributes:(NSDictionary *)attributes) {
                 [attrsArray addObject:[[YMMProfileAttribute notificationsEnabled] withValue:[attributes[key] boolValue]]];
             }
         // custom attributes
+        }
+        else if ([key isEqual: @"id"]) {
+            [YMMYandexMetrica setUserProfileID:attributes[key]];
         } else {
             // TODO: come up with a syntax solution to reset custom attributes. `null` will break type checking here
             if ([attributes[key] isEqual: @YES] || [attributes[key] isEqual: @NO]) {
@@ -115,7 +118,9 @@ RCT_EXPORT_METHOD(setUserProfileAttributes:(NSDictionary *)attributes) {
     }
 
     [profile applyFromArray: attrsArray];
-    [YMMYandexMetrica reportUserProfile:[profile copy] onFailure:NULL];
+    [YMMYandexMetrica reportUserProfile:[profile copy] onFailure:^(NSError *error) {
+        NSLog(@"Error: %@", error);
+    }];
 }
 
 @end
