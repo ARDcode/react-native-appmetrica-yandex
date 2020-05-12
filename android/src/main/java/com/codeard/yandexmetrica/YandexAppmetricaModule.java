@@ -21,6 +21,8 @@ import java.util.Date;
 import java.util.Arrays;
 
 import org.json.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import com.yandex.metrica.YandexMetrica;
 import com.yandex.metrica.YandexMetricaConfig;
@@ -75,7 +77,7 @@ public class YandexAppmetricaModule extends ReactContextBaseJavaModule {
     public void reportEvent(String message, @Nullable ReadableMap params) {
         try {
             if (params != null) {
-                YandexMetrica.reportEvent(message, convertReadableMapToJson(params));
+                YandexMetrica.reportEvent(message, convertMapToJson(params).toString());
             } else {
                 YandexMetrica.reportEvent(message);
             }
@@ -98,7 +100,7 @@ public class YandexAppmetricaModule extends ReactContextBaseJavaModule {
     public void reportError(@NonNull String message, @Nullable ReadableMap exceptionError) {
         Throwable exception = null;
         if (exceptionError != null) {
-            exception = new Throwable(convertReadableMapToJson(exceptionError));
+            exception = new Throwable(convertMapToJson(exceptionError).toString());
         }
         YandexMetrica.reportError(message, exception);
     }
@@ -227,84 +229,68 @@ public class YandexAppmetricaModule extends ReactContextBaseJavaModule {
      }
 
 
-     private JSONObject convertReadableMapToJsonWithMapToJsonParser(final ReadableMap readableMap){
-
-
-         ReadableMapKeySetIterator iterator = readableMap.keySetIterator();
-         JSONObject json = new JSONObject();
-
-         try {
-             while (iterator.hasNextKey()) {
-                 String key = iterator.nextKey();
-
-                 switch (readableMap.getType(key)) {
-                     case Null:
-                         json.put(key, null);
-                         break;
-                     case Boolean:
-                         json.put(key, readableMap.getBoolean(key));
-                         break;
-                     case Number:
-                         json.put(key, readableMap.getDouble(key));
-                         break;
-                     case String:
-                         json.put(key, readableMap.getString(key));
-                         break;
-                     case Array:
-                         json.put(key, readableMap.getArray(key));
-                         break;
-                     case Map:
-                         json.put(key, convertReadableMapToJsonWithMapToJsonParser(readableMap.getMap(key)));
-                         break;
-                     default:
-                         break;
-                 }
-             }
-         } catch (Exception ex) {
-             Log.d(TAG, "convertReadableMapToJson fail: " + ex);
-         }
-
-         return json;
-     }
-
-    private String convertReadableMapToJson(final ReadableMap readableMap) {
-
-
-
+    private JSONObject convertMapToJson(ReadableMap readableMap) {
+        JSONObject object = new JSONObject();
         ReadableMapKeySetIterator iterator = readableMap.keySetIterator();
-        JSONObject json = new JSONObject();
-
         try {
             while (iterator.hasNextKey()) {
                 String key = iterator.nextKey();
-
                 switch (readableMap.getType(key)) {
                     case Null:
-                        json.put(key, null);
+                        object.put(key, JSONObject.NULL);
                         break;
                     case Boolean:
-                        json.put(key, readableMap.getBoolean(key));
+                        object.put(key, readableMap.getBoolean(key));
                         break;
                     case Number:
-                        json.put(key, readableMap.getDouble(key));
+                        object.put(key, readableMap.getDouble(key));
                         break;
                     case String:
-                        json.put(key, readableMap.getString(key));
-                        break;
-                    case Array:
-                        json.put(key, readableMap.getArray(key));
+                        object.put(key, readableMap.getString(key));
                         break;
                     case Map:
-                        json.put(key, convertReadableMapToJsonWithMapToJsonParser(readableMap.getMap(key)));
+                        object.put(key, convertMapToJson(readableMap.getMap(key)));
                         break;
-                    default:
+                    case Array:
+                        object.put(key, convertArrayToJson(readableMap.getArray(key)));
                         break;
                 }
             }
-        } catch (Exception ex) {
-            Log.d(TAG, "convertReadableMapToJson fail: " + ex);
         }
+        catch (Exception ex) {
+            Log.d(TAG, "convertMapToJson fail: " + ex);
+        }
+        return object;
+    }
 
-        return json.toString();
+    private JSONArray convertArrayToJson(ReadableArray readableArray) {
+        JSONArray array = new JSONArray();
+        try {
+            for (int i = 0; i < readableArray.size(); i++) {
+                switch (readableArray.getType(i)) {
+                    case Null:
+                        break;
+                    case Boolean:
+                        array.put(readableArray.getBoolean(i));
+                        break;
+                    case Number:
+                        array.put(readableArray.getDouble(i));
+                        break;
+                    case String:
+                        array.put(readableArray.getString(i));
+                        break;
+                    case Map:
+                        array.put(convertMapToJson(readableArray.getMap(i)));
+                        break;
+                    case Array:
+                        array.put(convertArrayToJson(readableArray.getArray(i)));
+                        break;
+                }
+            }
+        }
+        catch (Exception ex) {
+            Log.d(TAG, "convertArrayToJson fail: " + ex);
+        }
+        return array;
     }
 }
