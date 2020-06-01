@@ -44,6 +44,16 @@ export class YandexMetrica {
     }
 
     /**
+     * Sends a Rvenue event message.
+     * @param {string} productId
+     * @param {number} price
+     * @param {number} quantity
+     */
+    static reportRevenue(productId: string, price: number, quantity: number) {
+        YandexAppmetrica.reportRevenue(productId, price, quantity);
+    }
+
+    /**
      * Sets the ID of the user profile.
      * @param {string} userProfileId
      */

@@ -19,6 +19,7 @@ import java.lang.Exception;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Arrays;
+import java.util.Currency;
 
 import org.json.JSONObject;
 import org.json.JSONArray;
@@ -28,6 +29,7 @@ import com.yandex.metrica.YandexMetrica;
 import com.yandex.metrica.YandexMetricaConfig;
 import com.yandex.metrica.profile.UserProfile;
 import com.yandex.metrica.profile.Attribute;
+import com.yandex.metrica.Revenue;
 
 public class YandexAppmetricaModule extends ReactContextBaseJavaModule {
 
@@ -86,7 +88,6 @@ public class YandexAppmetricaModule extends ReactContextBaseJavaModule {
         }
     }
 
-
     @ReactMethod
     public void reportError(@NonNull String message, @Nullable String exceptionError) {
         Throwable exception = null;
@@ -106,127 +107,137 @@ public class YandexAppmetricaModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void reportRevenue(String productId, Double price, Integer quantity) {
+        Revenue revenue = Revenue.newBuilder(price, Currency.getInstance("RUB"))
+            .withProductID(productId)
+            .withQuantity(quantity)
+            .build();
+
+        YandexMetrica.reportRevenue(revenue);
+    }
+
+    @ReactMethod
     public void setUserProfileID(String profileID) {
         YandexMetrica.setUserProfileID(profileID);
     }
 
-     @ReactMethod
-     public void setUserProfileAttributes(ReadableMap params) {
-         UserProfile.Builder userProfileBuilder = UserProfile.newBuilder();
-         ReadableMapKeySetIterator iterator = params.keySetIterator();
+    @ReactMethod
+    public void setUserProfileAttributes(ReadableMap params) {
+        UserProfile.Builder userProfileBuilder = UserProfile.newBuilder();
+        ReadableMapKeySetIterator iterator = params.keySetIterator();
 
-         while (iterator.hasNextKey()) {
-             String key = iterator.nextKey();
+        while (iterator.hasNextKey()) {
+            String key = iterator.nextKey();
 
-             switch (key) {
-                 // predefined attributes
-                 case "name":
-                     userProfileBuilder.apply(
-                       params.isNull(key)
-                         ? Attribute.name().withValueReset()
-                         : Attribute.name().withValue(params.getString(key))
-                     );
-                     break;
-                 case "gender":
-                     // FIXME: can't access Gender
-                     // userProfileBuilder.apply(
-                     //   params.isNull(key)
-                     //     ? Attribute.gender().withValueReset()
-                     //     : Attribute.gender().withValue(
-                     //         params.getString(key).equals("female")
-                     //           ? GenderAttribute.Gender.FEMALE
-                     //           : params.getString(key).equals("male")
-                     //             ? GenderAttribute.Gender.MALE
-                     //             : GenderAttribute.Gender.OTHER
-                     //       )
-                     // );
-                     break;
-                 case "age":
-                     userProfileBuilder.apply(
-                       params.isNull(key)
-                         ? Attribute.birthDate().withValueReset()
-                         : Attribute.birthDate().withAge(params.getInt(key))
-                     );
-                     break;
-                 case "birthDate":
-                     if (params.isNull(key)) {
-                         userProfileBuilder.apply(
-                           Attribute.birthDate().withValueReset()
-                         );
-                     } else if (params.getType(key) == ReadableType.Array) {
-                         // an array of [ year[, month][, day] ]
-                         ReadableArray date = params.getArray(key);
-                         if (date.size() == 1) {
-                             userProfileBuilder.apply(
-                               Attribute.birthDate().withBirthDate(
-                                 date.getInt(0)
-                               )
-                             );
-                         } else if (date.size() == 2) {
-                             userProfileBuilder.apply(
-                               Attribute.birthDate().withBirthDate(
-                                 date.getInt(0),
-                                 date.getInt(1)
-                               )
-                             );
-                         } else {
-                             userProfileBuilder.apply(
-                               Attribute.birthDate().withBirthDate(
-                                 date.getInt(0),
-                                 date.getInt(1),
-                                 date.getInt(2)
-                               )
-                             );
-                         }
-                     } else {
-                         // number of milliseconds since Unix epoch
-                         Date date = new Date((long)params.getInt(key));
-                         Calendar cal = Calendar.getInstance();
-                         cal.setTime(date);
-                         userProfileBuilder.apply(
-                           Attribute.birthDate().withBirthDate(cal)
-                         );
-                     }
-                     break;
-                 case "notificationsEnabled":
-                     userProfileBuilder.apply(
-                       params.isNull(key)
-                         ? Attribute.notificationsEnabled().withValueReset()
-                         : Attribute.notificationsEnabled().withValue(params.getBoolean(key))
-                     );
-                     break;
-                 // custom attributes
-                 default:
-                     // TODO: come up with a syntax solution to reset custom attributes. `null` will break type checking here
-                     switch (params.getType(key)) {
-                         case Boolean:
-                             userProfileBuilder.apply(
-                               Attribute.customBoolean(key).withValue(params.getBoolean(key))
-                             );
-                             break;
-                         case Number:
-                             userProfileBuilder.apply(
-                               Attribute.customNumber(key).withValue(params.getDouble(key))
-                             );
-                             break;
-                         case String:
-                             String value = params.getString(key);
-                             if (value.startsWith("+") || value.startsWith("-")) {
-                                 userProfileBuilder.apply(
-                                   Attribute.customCounter(key).withDelta(Double.parseDouble(value))
-                                 );
-                             } else {
-                                 userProfileBuilder.apply(
-                                   Attribute.customString(key).withValue(value)
-                                 );
-                             }
-                             break;
-                     }
-             }
-         }
+            switch (key) {
+                // predefined attributes
+                case "name":
+                    userProfileBuilder.apply(
+                    params.isNull(key)
+                        ? Attribute.name().withValueReset()
+                        : Attribute.name().withValue(params.getString(key))
+                    );
+                    break;
+                case "gender":
+                    // FIXME: can't access Gender
+                    // userProfileBuilder.apply(
+                    //   params.isNull(key)
+                    //     ? Attribute.gender().withValueReset()
+                    //     : Attribute.gender().withValue(
+                    //         params.getString(key).equals("female")
+                    //           ? GenderAttribute.Gender.FEMALE
+                    //           : params.getString(key).equals("male")
+                    //             ? GenderAttribute.Gender.MALE
+                    //             : GenderAttribute.Gender.OTHER
+                    //       )
+                    // );
+                    break;
+                case "age":
+                    userProfileBuilder.apply(
+                    params.isNull(key)
+                        ? Attribute.birthDate().withValueReset()
+                        : Attribute.birthDate().withAge(params.getInt(key))
+                    );
+                    break;
+                case "birthDate":
+                    if (params.isNull(key)) {
+                        userProfileBuilder.apply(
+                        Attribute.birthDate().withValueReset()
+                        );
+                    } else if (params.getType(key) == ReadableType.Array) {
+                        // an array of [ year[, month][, day] ]
+                        ReadableArray date = params.getArray(key);
+                        if (date.size() == 1) {
+                            userProfileBuilder.apply(
+                            Attribute.birthDate().withBirthDate(
+                                date.getInt(0)
+                            )
+                            );
+                        } else if (date.size() == 2) {
+                            userProfileBuilder.apply(
+                            Attribute.birthDate().withBirthDate(
+                                date.getInt(0),
+                                date.getInt(1)
+                            )
+                            );
+                        } else {
+                            userProfileBuilder.apply(
+                            Attribute.birthDate().withBirthDate(
+                                date.getInt(0),
+                                date.getInt(1),
+                                date.getInt(2)
+                            )
+                            );
+                        }
+                    } else {
+                        // number of milliseconds since Unix epoch
+                        Date date = new Date((long)params.getInt(key));
+                        Calendar cal = Calendar.getInstance();
+                        cal.setTime(date);
+                        userProfileBuilder.apply(
+                        Attribute.birthDate().withBirthDate(cal)
+                        );
+                    }
+                    break;
+                case "notificationsEnabled":
+                    userProfileBuilder.apply(
+                    params.isNull(key)
+                        ? Attribute.notificationsEnabled().withValueReset()
+                        : Attribute.notificationsEnabled().withValue(params.getBoolean(key))
+                    );
+                    break;
+                // custom attributes
+                default:
+                    // TODO: come up with a syntax solution to reset custom attributes. `null` will break type checking here
+                    switch (params.getType(key)) {
+                        case Boolean:
+                            userProfileBuilder.apply(
+                            Attribute.customBoolean(key).withValue(params.getBoolean(key))
+                            );
+                            break;
+                        case Number:
+                            userProfileBuilder.apply(
+                            Attribute.customNumber(key).withValue(params.getDouble(key))
+                            );
+                            break;
+                        case String:
+                            String value = params.getString(key);
+                            if (value.startsWith("+") || value.startsWith("-")) {
+                                userProfileBuilder.apply(
+                                Attribute.customCounter(key).withDelta(Double.parseDouble(value))
+                                );
+                            } else {
+                                userProfileBuilder.apply(
+                                Attribute.customString(key).withValue(value)
+                                );
+                            }
+                            break;
+                    }
+            }
+        }
 
-         YandexMetrica.reportUserProfile(userProfileBuilder.build());
-     }
+        YandexMetrica.reportUserProfile(userProfileBuilder.build());
+    }
 
 
     private JSONObject convertMapToJson(ReadableMap readableMap) {
