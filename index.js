@@ -80,4 +80,11 @@ export class YandexMetrica {
         });
         YandexAppmetrica.setUserProfileAttributes(readyAttributes);
     }
+
+    /**
+    * Sends saved events from buffer.
+    */
+    static sendEventsBuffer() {
+        YandexAppmetrica.sendEventsBuffer();
+    }
 }

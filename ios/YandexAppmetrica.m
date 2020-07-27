@@ -132,4 +132,8 @@ RCT_EXPORT_METHOD(setUserProfileAttributes:(NSDictionary *)attributes) {
     }];
 }
 
+RCT_EXPORT_METHOD(sendEventsBuffer) {
+    [YMMYandexMetrica sendEventsBuffer];
+}
+
 @end
