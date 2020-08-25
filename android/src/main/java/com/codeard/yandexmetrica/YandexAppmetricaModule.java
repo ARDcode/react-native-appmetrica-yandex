@@ -304,4 +304,9 @@ public class YandexAppmetricaModule extends ReactContextBaseJavaModule {
         }
         return array;
     }
+
+    @ReactMethod
+    public void sendEventsBuffer() {
+        YandexMetrica.sendEventsBuffer();
+    }
 }
