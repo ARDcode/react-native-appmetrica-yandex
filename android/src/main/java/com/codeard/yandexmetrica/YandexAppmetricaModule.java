@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.util.Log;
 
+import androidx.annotation.LongDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -16,20 +17,34 @@ import com.facebook.react.bridge.ReadableMapKeySetIterator;
 import com.facebook.react.bridge.ReadableType;
 
 import java.lang.Exception;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Arrays;
 import java.util.Currency;
 
 import org.json.JSONObject;
 import org.json.JSONArray;
-import org.json.JSONException;
 
 import com.yandex.metrica.YandexMetrica;
 import com.yandex.metrica.YandexMetricaConfig;
+import com.yandex.metrica.ecommerce.ECommerceAmount;
+import com.yandex.metrica.ecommerce.ECommerceCartItem;
+import com.yandex.metrica.ecommerce.ECommerceEvent;
+import com.yandex.metrica.ecommerce.ECommerceOrder;
+import com.yandex.metrica.ecommerce.ECommercePrice;
+import com.yandex.metrica.ecommerce.ECommerceProduct;
+import com.yandex.metrica.ecommerce.ECommerceReferrer;
+import com.yandex.metrica.ecommerce.ECommerceScreen;
 import com.yandex.metrica.profile.UserProfile;
 import com.yandex.metrica.profile.Attribute;
 import com.yandex.metrica.Revenue;
+
+import java.lang.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 public class YandexAppmetricaModule extends ReactContextBaseJavaModule {
 
@@ -47,9 +62,82 @@ public class YandexAppmetricaModule extends ReactContextBaseJavaModule {
         return TAG;
     }
 
+    public ECommerceScreen createScreen(ReadableMap params) {
+        ECommerceScreen screen = new ECommerceScreen().setName(params.getString("screenName")).setSearchQuery(params.getString("searchQuery"));
+        return screen;
+    }
+
+    public ECommerceProduct createProduct(ReadableMap params) {
+        ECommercePrice actualPrice = new ECommercePrice(new ECommerceAmount(Integer.parseInt(params.getString("price")), params.getString("currency")));
+        ECommerceProduct product = new ECommerceProduct(params.getString("sku")).setActualPrice(actualPrice).setName(params.getString("name"));
+        return product;
+    }
+
+    public ECommerceCartItem createCartItem(ReadableMap params) {
+        ECommerceScreen screen = this.createScreen(params);
+        ECommerceProduct product = this.createProduct(params);
+        ECommercePrice actualPrice = new ECommercePrice(new ECommerceAmount(Integer.parseInt(params.getString("price")), params.getString("currency")));
+        ECommerceReferrer referrer = new ECommerceReferrer().setScreen(screen);
+        ECommerceCartItem cartItem = new ECommerceCartItem(product, actualPrice, Integer.parseInt(params.getString("quantity"))).setReferrer(referrer);
+        return cartItem;
+    }
+
+    @ReactMethod
+    public void showScreen(ReadableMap params) {
+        ECommerceScreen screen = this.createScreen(params);
+        ECommerceEvent showScreenEvent = ECommerceEvent.showScreenEvent(screen);
+        YandexMetrica.reportECommerce(showScreenEvent);
+    }
+
+    @ReactMethod
+    public void showProductCard(ReadableMap params) {
+        ECommerceScreen screen = this.createScreen(params);
+        ECommerceProduct product = this.createProduct(params);
+        ECommerceEvent showProductCardEvent = ECommerceEvent.showProductCardEvent(product, screen);
+        YandexMetrica.reportECommerce(showProductCardEvent);
+    }
+
+    @ReactMethod
+    public void addToCart(ReadableMap params) {
+        ECommerceCartItem cartItem = this.createCartItem(params);
+        ECommerceEvent addCartItemEvent = ECommerceEvent.addCartItemEvent(cartItem);
+        YandexMetrica.reportECommerce(addCartItemEvent);
+    }
+
+    @ReactMethod
+    public void removeFromCart(ReadableMap params) {
+        ECommerceCartItem cartItem = this.createCartItem(params);
+        ECommerceEvent removeCartItemEvent = ECommerceEvent.removeCartItemEvent(cartItem);
+        YandexMetrica.reportECommerce(removeCartItemEvent);
+    }
+
+    @ReactMethod
+    public void beginCheckout(ReadableArray products, String identifier) {
+        ArrayList<ECommerceCartItem> cartItems = new ArrayList<>();
+        for (int i = 0; i < products.size(); i++) {
+            ReadableMap productData = products.getMap(i);
+            cartItems.add(this.createCartItem(productData));
+        }
+        ECommerceOrder order = new ECommerceOrder(identifier, cartItems);
+        ECommerceEvent beginCheckoutEvent = ECommerceEvent.beginCheckoutEvent(order);
+        YandexMetrica.reportECommerce(beginCheckoutEvent);
+    }
+
+    @ReactMethod
+    public void finishCheckout(ReadableArray products, String identifier) {
+        ArrayList<ECommerceCartItem> cartItems = new ArrayList<>();
+        for (int i = 0; i < products.size(); i++) {
+            ReadableMap productData = products.getMap(i);
+            cartItems.add(this.createCartItem(productData));
+        }
+        ECommerceOrder order = new ECommerceOrder(identifier, cartItems);
+        ECommerceEvent purchaseEvent = ECommerceEvent.purchaseEvent(order);
+        YandexMetrica.reportECommerce(purchaseEvent);
+    }
+
     @ReactMethod
     public void activateWithApiKey(String apiKey) {
-        YandexMetricaConfig.Builder configBuilder = YandexMetricaConfig.newConfigBuilder(apiKey);
+        YandexMetricaConfig.Builder configBuilder = YandexMetricaConfig.newConfigBuilder(apiKey).withLogs();
         YandexMetrica.activate(getReactApplicationContext().getApplicationContext(), configBuilder.build());
         Activity activity = getCurrentActivity();
         if (activity != null) {
@@ -60,7 +148,7 @@ public class YandexAppmetricaModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void activateWithConfig(ReadableMap params) {
-        YandexMetricaConfig.Builder configBuilder = YandexMetricaConfig.newConfigBuilder(params.getString("apiKey"));
+        YandexMetricaConfig.Builder configBuilder = YandexMetricaConfig.newConfigBuilder(params.getString("apiKey")).withLogs();
         if (params.hasKey("sessionTimeout")) {
             configBuilder.withSessionTimeout(params.getInt("sessionTimeout"));
         }
@@ -76,16 +164,13 @@ public class YandexAppmetricaModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void reportEvent(String message, @Nullable ReadableMap params) {
-        try {
-            if (params != null) {
-                YandexMetrica.reportEvent(message, convertMapToJson(params).toString());
-            } else {
-                YandexMetrica.reportEvent(message);
-            }
-        } catch (Exception e) {
-            Log.e(TAG, "Unable to report Yandex Mobile Metrica event: " + e);
-        }
+    public void reportEvent(String message) {
+        YandexMetrica.reportEvent(message);
+    }
+
+    @ReactMethod
+    public void reportEventWithParams(String message, @Nullable ReadableMap params) {
+        YandexMetrica.reportEvent(message, convertMapToJson(params).toString());
     }
 
     @ReactMethod
